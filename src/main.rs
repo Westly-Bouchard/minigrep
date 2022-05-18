@@ -13,12 +13,16 @@ fn main() {
     // Test to make sure it works
     println!("Looking for {} in {}", config.query, config.filename);
 
-    // Read the contents of the file
+    run(config);
+}
+
+fn run(config: Config) {
+    // Read contents to string
     let contents = fs::read_to_string(config.filename)
         .expect("Failed to read the contents of the file");
-    
+
     // Test to make sure it works
-    println!("With contents: {}", contents);
+    println!("{}", contents);
 }
 
 struct Config {
@@ -28,10 +32,12 @@ struct Config {
 
 impl Config {
     fn new(args: &[String]) -> Result<Config, &'static str> {
+        // We need three total args to successfully run the program
         if args.len() < 3 {
             return Err("Not enough arguments");
         }
 
+        // Grab the query and filename from the arguments 
         let query = args[1].clone();
         let filename = args[2].clone();
 
