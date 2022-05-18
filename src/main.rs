@@ -1,12 +1,9 @@
 use std::{env, process};
 use minigrep::Config;
 
-fn main() {
-    // Collect the arguments passed to the executable from the command line as an array of strings
-    let args: Vec<String> = env::args().collect();
-    
+fn main() {    
     // Parse command line arguments
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
