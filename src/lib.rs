@@ -22,8 +22,10 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
         // Read contents to string
         let contents = fs::read_to_string(config.filename)?;
 
-        // Test to make sure it works
-        println!("With text:\n{}", contents);
+        // Call the search function and iterate over the lines it returns
+        for line in search(&config.query, &contents) {
+            println!("{}", line);
+        }
     
         Ok(())
 }
