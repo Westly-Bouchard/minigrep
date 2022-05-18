@@ -1,4 +1,4 @@
-use std::{env, fs, process};
+use std::{env, fs, process, error::Error};
 
 fn main() {
     // Collect the arguments passed to the executable from the command line as an array of strings
@@ -13,16 +13,20 @@ fn main() {
     // Test to make sure it works
     println!("Looking for {} in {}", config.query, config.filename);
 
-    run(config);
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }
 }
 
-fn run(config: Config) {
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
     // Read contents to string
-    let contents = fs::read_to_string(config.filename)
-        .expect("Failed to read the contents of the file");
+    let contents = fs::read_to_string(config.filename)?;
 
     // Test to make sure it works
-    println!("{}", contents);
+    println!("With text:\n{}", contents);
+
+    Ok(())
 }
 
 struct Config {
