@@ -1,11 +1,14 @@
-use std::{env, fs};
+use std::{env, fs, process};
 
 fn main() {
     // Collect the arguments passed to the executable from the command line as an array of strings
     let args: Vec<String> = env::args().collect();
     
     // Parse command line arguments
-    let config = Config::new(&args);
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
 
     // Test to make sure it works
     println!("Looking for {} in {}", config.query, config.filename);
@@ -24,10 +27,14 @@ struct Config {
 }
 
 impl Config {
-    fn new(args: &[String]) -> Config {
+    fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("Not enough arguments");
+        }
+
         let query = args[1].clone();
         let filename = args[2].clone();
 
-        Config {query, filename}
+        Ok(Config {query, filename})
     }
 }
