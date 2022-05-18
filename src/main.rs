@@ -5,23 +5,29 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     
     // Parse command line arguments
-    let (query, filename) = parse_config(&args);
+    let config = Config::new(&args);
 
     // Test to make sure it works
-    println!("Looking for {} in {}", query, filename);
+    println!("Looking for {} in {}", config.query, config.filename);
 
     // Read the contents of the file
-    let contents = fs::read_to_string(filename)
+    let contents = fs::read_to_string(config.filename)
         .expect("Failed to read the contents of the file");
     
     // Test to make sure it works
     println!("With contents: {}", contents);
 }
 
-fn parse_config(args: &[String]) -> (&str, &str) {
-    // Parse arguments, starts at 1 because the first argument is the name of the executable
-    let query = &args[1];
-    let filename = &args[2];
+struct Config {
+    query: String,
+    filename: String,
+}
 
-    (query, filename)
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        Config {query, filename}
+    }
 }
